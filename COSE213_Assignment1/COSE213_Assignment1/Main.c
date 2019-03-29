@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
+typedef struct _term {
 	float coeff; // 항의 계수
 	int expon; // 항의 차수
-	term* next;
+	struct _term * next;
 } term;
 
-typedef struct {
+typedef struct _polynomial {
 	term* start;
 	term* head;
 	int length;
@@ -19,36 +19,49 @@ void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2);
 
 int main()
 {
-	printf("hello world!");
-	/*
 	polynomial* poly1 = MakePoly();
 	polynomial* poly2 = MakePoly();
 
-	한줄의 입력을 쭉 받는다. 두개씩 분리해서 앞의 수는 계수, 뒤의 수는 차수
-
-	while (입력이 남아있는 동안)
+	printf("첫번째 다항식을 입력해주세요.\n");
+	// get first polynomial, first one is coeffecient, second is exponential
+	while (1)
 	{
+		float front;
+		int back;
+		scanf("%f %d", &front, &back);
 		PolyAdd(poly1, front, back);
+		if (getchar() == '\n') break;
 	}
 
-	두번째 줄의 입력을 받는다.
-
-	while (입력이 남아있는 동안)
+	printf("두번째 다항식을 입력해주세요.\n");
+	// get second polynomial
+	while (1)
 	{
+		float front;
+		int back;
+		scanf("%f %d", &front, &back);
 		PolyAdd(poly2, front, back);
+		if (getchar() == '\n') break;
 	}
 
 	polynomial* outPoly = MakePoly();
 
-	PolyCombine(polysum, poly1, poly2);
-	printf(polysum);
-	*/
+	PolyCombine(outPoly, poly1, poly2);
+
+	for (term* pTerm = outPoly->start; pTerm != NULL; pTerm = pTerm->next)
+	{
+		if (pTerm != outPoly->start) printf("+");
+
+		if (pTerm->coeff != 0 && pTerm->expon != 0) printf(" %0.3fx^%d ", pTerm->coeff, pTerm->expon);
+		else if (pTerm->expon == 0) printf(" %0.3f", pTerm->coeff);
+	}
+
 	return 0;
 }
 
 polynomial* MakePoly()
 {
-	polynomial* out = malloc(sizeof(polynomial));
+	polynomial* out = (polynomial*)malloc(sizeof(polynomial));
 
 	out->start = NULL;
 	out->head = NULL;
@@ -65,7 +78,7 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 	newTerm->expon = _expon;
 	newTerm->next = NULL;
 
-	if (out->head == NULL)
+	if (out->start == NULL)
 	{ // if there are no term, add first term
 		out->head = newTerm;
 		out->start = newTerm;
@@ -79,7 +92,7 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 
 		for (int i = 0; i < out->length; i++)
 		{
-			if ((nextPlace->expon > _expon))
+			if ((nextPlace->expon < _expon))
 			{
 				break;
 			}
@@ -98,7 +111,7 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 		if (out->start == nextPlace) out->start = newTerm;
 		if (newTerm->next == NULL) out->head = newTerm;
 
-		beforePlace->next = newTerm;
+		if (beforePlace != NULL) beforePlace->next = newTerm;
 		newTerm->next = nextPlace;
 	}
 	out->length++;
@@ -107,12 +120,12 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 
 void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2)
 {
-	for (term* term1 = _in1->start; term1->next != NULL; term1 = term1->next)
+	for (term* term1 = _in1->start; term1 != NULL; term1 = term1->next)
 	{
 		PolyAdd(out, term1->coeff, term1->expon);
 	}
 
-	for (term* term2 = _in1->start; term2->next != NULL; term2 = term2->next)
+	for (term* term2 = _in2->start; term2 != NULL; term2 = term2->next)
 	{
 		PolyAdd(out, term2->coeff, term2->expon);
 	}
