@@ -104,3 +104,18 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 	out->length++;
 	return;
 }
+
+void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2)
+{
+	for (term* term1 = _in1->start; term1->next != NULL; term1 = term1->next)
+	{
+		PolyAdd(out, term1->coeff, term1->expon);
+	}
+
+	for (term* term2 = _in1->start; term2->next != NULL; term2 = term2->next)
+	{
+		PolyAdd(out, term2->coeff, term2->expon);
+	}
+
+	return;
+}
