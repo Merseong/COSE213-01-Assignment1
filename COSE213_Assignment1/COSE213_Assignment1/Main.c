@@ -16,6 +16,8 @@ typedef struct _polynomial {
 polynomial* MakePoly();
 void PolyAdd(polynomial* out, float _coeff, int _expon);
 void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2);
+void DeletePoly(polynomial* toDelete);
+void DeleteTerms(term* toDelete);
 
 int main()
 {
@@ -60,6 +62,9 @@ int main()
 	}
 
 	getchar();
+	DeletePoly(poly1);
+	DeletePoly(poly2);
+	DeletePoly(outPoly);
 	return 0;
 }
 
@@ -134,5 +139,22 @@ void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2)
 		PolyAdd(out, term2->coeff, term2->expon);
 	}
 
+	return;
+}
+
+void DeletePoly(polynomial* toDelete)
+{
+	DeleteTerms(toDelete->start);
+	free(toDelete);
+	return;
+}
+
+void DeleteTerms(term* toDelete)
+{
+	if (toDelete->next != NULL)
+	{
+		DeleteTerms(toDelete->next);
+	}
+	free(toDelete);
 	return;
 }
