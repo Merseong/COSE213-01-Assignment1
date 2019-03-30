@@ -50,12 +50,16 @@ int main()
 
 	for (term* pTerm = outPoly->start; pTerm != NULL; pTerm = pTerm->next)
 	{
-		if (pTerm != outPoly->start) printf("+");
+		if (pTerm->coeff != 0)
+		{
+			if (pTerm != outPoly->start) printf("+");
 
-		if (pTerm->coeff != 0 && pTerm->expon != 0) printf(" %0.3fx^%d ", pTerm->coeff, pTerm->expon);
-		else if (pTerm->expon == 0) printf(" %0.3f", pTerm->coeff);
+			if (pTerm->expon != 0) printf(" %0.3fx^%d ", pTerm->coeff, pTerm->expon);
+			else printf(" %0.3f", pTerm->coeff);
+		}
 	}
 
+	getchar();
 	return 0;
 }
 
@@ -94,6 +98,7 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 		{
 			if ((nextPlace->expon < _expon))
 			{
+				newTerm->next = nextPlace;
 				break;
 			}
 			else if (nextPlace->expon == _expon)
@@ -108,11 +113,10 @@ void PolyAdd(polynomial* out, float _coeff, int _expon)
 				nextPlace = nextPlace->next;
 			}
 		}
-		if (out->start == nextPlace) out->start = newTerm;
-		if (newTerm->next == NULL) out->head = newTerm;
+		if (beforePlace != NULL) beforePlace->next = newTerm; // if this is not a start of list
+		else out->start = newTerm;
 
-		if (beforePlace != NULL) beforePlace->next = newTerm;
-		newTerm->next = nextPlace;
+		if (newTerm->next == NULL) out->head = newTerm; // if this is end of list
 	}
 	out->length++;
 	return;
