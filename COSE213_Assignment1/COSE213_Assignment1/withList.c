@@ -19,7 +19,7 @@ void PolyCombine(polynomial* out, polynomial* _in1, polynomial* _in2);
 void DeletePoly(polynomial* toDelete);
 void DeleteTerms(term* toDelete);
 
-int mainList()
+int _main()
 {
 	polynomial* poly1 = MakePoly();
 	polynomial* poly2 = MakePoly();
