@@ -1,8 +1,9 @@
+/// The output is also displayed in normal descending order 
+/// only when the input is in descending order.
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_TERMS 100
 
-// input은 무조건 내림차순으로 들어온다.
+#define MAX_TERMS 100
 
 typedef struct _polynomial {
 	float coef;
@@ -14,38 +15,66 @@ int avail = 0;
 typedef struct _polyMemory {
 	int start;
 	int end;
+	int count;
 } polyMemory;
 
-polyMemory* MakePoly();
+polyMemory* _MakePoly();
 void AddTerm(polyMemory* out, float _coef, int _expon);
 void AddPoly(polyMemory* out, polyMemory left, polyMemory right);
 
 int main()
 {
-	printf("hello world!");
-	/*
-	polyMemory* poly1 = MakePoly();
-	get poly1 data - AddTerm;
+	polyMemory* poly1 = _MakePoly();
+	//get poly1 data;
+	printf("첫번째 다항식을 입력하세요.\n");
+	while (1)
+	{
+		float front;
+		int back;
+		scanf("%f %d", &front, &back);
+		AddTerm(poly1, front, back);
+		if (getchar() == '\n') break;
+	}
 
-	polyMemory* poly2 = MakePoly();
-	get poly2 data - AddTerm;
+	polyMemory* poly2 = _MakePoly();
+	//get poly2 data;
+	printf("두번째 다항식을 입력하세요.\n");
+	while (1)
+	{
+		float front;
+		int back;
+		scanf("%f %d", &front, &back);
+		AddTerm(poly2, front, back);
+		if (getchar() == '\n') break;
+	}
 
-	polyMemory* polySum = MakePoly();
+	polyMemory* polySum = _MakePoly();
 	AddPoly(polySum, *poly1, *poly2);
 
-	print polySum;
+	//print polySum;
+	for (int i = polySum->start; i <= polySum->end; i++)
+	{
+		if (i != polySum->start) printf(" + ");
+		if (terms[i].coef != 0 && terms[i].expon != 0) printf("%0.3fx^%d", terms[i].coef, terms[i].expon);
+		else if (terms[i].expon == 0) printf("%0.3f", terms[i].coef);
+	}
 
-	free all polys;
-	*/
-	return 0; 
+	//free all polys;
+	free(polySum);
+	free(poly1);
+	free(poly2);
+
+	getchar();
+	return 0;
 }
 
 // init and reset new polynomial and return its pointer
-polyMemory* MakePoly()
+polyMemory* _MakePoly()
 { 
 	polyMemory* out = (polyMemory*)malloc(sizeof(polyMemory));
 	out->start = avail;
 	out->end = avail++;
+	out->count = 0;
 	terms[out->start].coef = 0;
 	terms[out->start].expon = 0;
 	return out;
@@ -59,9 +88,15 @@ void AddTerm(polyMemory* out, float _coef, int _expon)
 		fprintf(stderr, "Too many terms in the polynomial\n");
 		exit(EXIT_FAILURE);
 	}
+	if (out->count != 0)
+	{
+		out->end++;
+		avail++;
+	}
+
 	terms[out->end].coef = _coef;
-	terms[out->end++].expon = _expon;
-	avail++;
+	terms[out->end].expon = _expon;
+	out->count++;
 	return;
 }
 
