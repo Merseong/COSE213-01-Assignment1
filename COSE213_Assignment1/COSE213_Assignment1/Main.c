@@ -31,7 +31,11 @@ int main()
 	{
 		float front;
 		float back;
-		scanf("%f %f", &front, &back);
+		if (!scanf("%f %f", &front, &back))
+		{
+			fprintf(stderr, "wrong input warning");
+			exit(EXIT_FAILURE);
+		}
 		AddTerm(poly1, front, (int)back);
 		if (getchar() == '\n') break;
 	}
@@ -43,7 +47,11 @@ int main()
 	{
 		float front;
 		float back;
-		scanf("%f %f", &front, &back);
+		if (!scanf("%f %f", &front, &back))
+		{
+			fprintf(stderr, "wrong input warning");
+			exit(EXIT_FAILURE);
+		}
 		AddTerm(poly2, front, (int)back);
 		if (getchar() == '\n') break;
 	}
