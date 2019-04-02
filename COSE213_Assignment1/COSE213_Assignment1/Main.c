@@ -30,9 +30,9 @@ int main()
 	while (1)
 	{
 		float front;
-		int back;
-		scanf("%f %d", &front, &back);
-		AddTerm(poly1, front, back);
+		float back;
+		scanf("%f %f", &front, &back);
+		AddTerm(poly1, front, (int)back);
 		if (getchar() == '\n') break;
 	}
 
@@ -42,9 +42,9 @@ int main()
 	while (1)
 	{
 		float front;
-		int back;
-		scanf("%f %d", &front, &back);
-		AddTerm(poly2, front, back);
+		float back;
+		scanf("%f %f", &front, &back);
+		AddTerm(poly2, front, (int)back);
 		if (getchar() == '\n') break;
 	}
 
@@ -54,9 +54,12 @@ int main()
 	//print polySum;
 	for (int i = polySum->start; i <= polySum->end; i++)
 	{
-		if (i != polySum->start) printf(" + ");
-		if (terms[i].coef != 0 && terms[i].expon != 0) printf("%0.3fx^%d", terms[i].coef, terms[i].expon);
-		else if (terms[i].expon == 0) printf("%0.3f", terms[i].coef);
+		if (terms[i].coef != 0)
+		{
+			if (i != polySum->start) printf(" + ");
+			if (terms[i].expon != 0) printf("%0.3fx^%d", terms[i].coef, terms[i].expon);
+			else if (terms[i].expon == 0) printf("%0.3f", terms[i].coef);
+		}
 	}
 
 	//free all polys;
